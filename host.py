@@ -32,7 +32,7 @@ class Host(object):
         if 'Network is unreachable' in error:
             return ['No connection - no files!']
         else:
-            files = out.split('\t')
+            files = [f for f in out.split('\t') if f != '']
             self.logger.info('Found the following files: %s' % files)
             return files
 

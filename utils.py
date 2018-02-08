@@ -15,9 +15,11 @@ def run_shell_command(command):
 
     Note: This will not work for commands that need to be executed with
     root privileges (using sudo). For Mutation this is only true for shutdown
-    and restart, hence the following was enabled on all hosts:
+    and restart, hence the following was done on all hosts:
 
-    TODO
+    $ sudo chmod u+s /sbin/shutdown
+
+    This allows regular users to run the shutdown command as root.
 
     >>> out, err = run_shell_command('echo test')
     >>> print(out)
@@ -38,8 +40,8 @@ def run_shell_command(command):
         out = out.decode('utf-8')
         error = error.decode('utf-8')
         if out:
-            logger.info('Out: ', out.strip())
-        if error:
+            logger.info('Out: %s' % out.strip())
+        if process.returncode != 0:
             logger.error(error.strip())
         return out, error
     except FileNotFoundError:  # occurs if no valid command was given

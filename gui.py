@@ -3,6 +3,7 @@ from config import hosts, groups, basepath
 from host import Host
 import logging, os
 from datetime import datetime
+from utils import run_shell_command, run_ssh_command
 
 logging.basicConfig(level=logging.INFO)
 
@@ -40,8 +41,7 @@ class HostFrame(tk.Frame):
         self.files_label = tk.Label(self, text='Files at ')
 
         # show connection info
-        self.conection = tk.StringVar()
-        self.conection_label = tk.Label(self, textvariable=self.conection)
+        self.conection_label = tk.Label(self, text='__check connection__')
 
         self.label.pack(side='top', fill='x', expand=True)
         self.files_label.pack(side='top', fill='x', expand=True)
@@ -54,22 +54,33 @@ class HostFrame(tk.Frame):
     def show_files(self, current_group):
         host_folder = os.path.join(current_group, self.host.number)
         self.files_label['text'] = 'Files at %s' % host_folder
-        path = os.path.join(basepath, host_folder)
-        files = self.host.list_files(path)
-        if files:
+        path_to_host_folder = os.path.join(basepath, host_folder)
+        files_only_on_this_host = self.host.list_files(path_to_host_folder)
+        path_to_all_folder = os.path.join(basepath, current_group, 'all')
+        files_on_all_hosts = self.host.list_files(path_to_all_folder)
+        if files_only_on_this_host:
             self.files.delete(0, 'end')  # delete previous entries
-            for name in files:
+            self.files.insert('end', 'Files only on this host:')
+            for name in files_only_on_this_host:
                 if not name.startswith('.') and name != 'Readme.md':
                     self.files.insert('end', name)
+        if files_on_all_hosts:
+            self.files.insert('end', 'Files on all hosts:')
+            for name in files_on_all_hosts:
+                if not name.startswith('.') and name != 'Readme.md':
+                    self.files.insert('end', name)
+            
 
     def set_connection(self):
         time = datetime.now().time().replace(microsecond=0)
-        # print(time.split('\n').split(':')[:1])
         if self.host.rechable():
-            text = 'Reachable (last checked: %s)' % time
+            text = 'Reachable\n(last checked: %s)' % time
+            color = 'green'
         else:
-            text = 'Unrechable (last checked: %s)' % time
-        self.conection.set(text)
+            text = 'Unrechable\n(last checked: %s)' % time
+            color = 'red'
+        self.conection_label['text'] = text
+        self.conection_label['fg'] = color
         # self.parent.after(5000, self.check_connection)
 
 
@@ -125,7 +136,17 @@ class MutationGui(tk.Frame):
     def update(self):
         # prsync -r -v -o $logOutDir -e $logErrorDir -H "${hosts[*]}" $sourcef $destination
         # see utils...
-        pass
+        # copy_to_all_hosts(files, ip_addresses)
+        host_ips = ' '.join(hosts.values())
+        source = basepath
+        destination = basepath[:-1]  # no / in the end!
+        #self.logger.info(run_ssh_command('echo $(pwd)/$line', '192.168.0.10'))
+        #self.logger.info(run_ssh_command('ls', '192.168.0.10'))
+        # TODO: show files in all
+        cmd = 'prsync -r -v -H "%s" %s %s' % (host_ips, source, destination)
+        self.logger.info(cmd)
+        run_shell_command(cmd)
+        
 
 
 if __name__ == "__main__":
