@@ -1,5 +1,5 @@
 import subprocess
-import shlex
+import shlex, errno
 import logging
 #from pssh.pssh_client import ParallelSSHClient  # pip install parallel-ssh
 #from pssh.utils import enable_logger, logger
@@ -26,7 +26,7 @@ def run_shell_command(command):
     test
     <BLANKLINE>
     >>> print(run_shell_command('x'))
-    ('', 'x is no valid command', 0)
+    x is no valid command
 
     :param command:
     :return:
@@ -44,8 +44,9 @@ def run_shell_command(command):
         if process.returncode != 0:
             logger.error(error.strip())
         return out, error
-    except FileNotFoundError:  # occurs if no valid command was given
-        return '', '%s is no valid command' % command, 0
+    except:  # occurs if no valid command was given
+        logger.info('%s is no valid command' % command)
+        return '%s is no valid command' % command
 
 
 def run_ssh_command(command, ip_address):
@@ -61,7 +62,7 @@ def run_ssh_command(command, ip_address):
     """
     # -tt is needed because stdin is not a terminal
     # -o ConnectTimeout=2 lets ssh wait only two seconds for the connection
-    command = 'ssh -tt -o ConnectTimeout=3 %s "%s"' % (ip_address, command)
+    command = 'ssh -tt -o ConnectTimeout=2 %s "%s"' % (ip_address, command)
     return run_shell_command(command)
 
 """

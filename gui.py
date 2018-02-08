@@ -1,28 +1,36 @@
-import tkinter as tk
+import Tkinter as tk
 from config import hosts, groups, basepath
 from host import Host
+from projector import Projector
 import logging, os
 from datetime import datetime
 from utils import run_shell_command, run_ssh_command
 
 logging.basicConfig(level=logging.INFO)
 
-class MainControlFrame(tk.Frame):
 
-    def __init__(self, parent, *args, **kwargs):
+class ProjectorFrame(tk.Frame):
+
+    def __init__(self, parent, projector, *args, **kwargs):
         tk.Frame.__init__(self, parent, *args, **kwargs)
+        self.parent = parent
+        self.projector = projector
 
-        self.group_label = tk.Label(self, text='Select group: ')
-        self.selected_group = tk.StringVar(self)
-        self.selected_group.trace('w', self.change_group)
-        self.selected_group.set('TeamTest')  # default
-        self.group = tk.OptionMenu(self, self.selected_group, *groups)
+        self.info = tk.LabelFrame(self, text='Projector: %s' % projector.name)
+        self.host_ip = tk.Label(self.info, text='Host: %s' % self.projector.host_ip)
+        self.position = tk.Label(self.info, text='Position: %s' % self.projector.position)
+        self.checker_app = tk.Label(self.info, text='Checkerapp: %s' % self.projector.checker_app)
+        self.port = tk.Label(self.info, text='Checkerapp port: %s' % self.projector.port)
+        self.syphon_server = tk.Label(self.info, text='Syphon server: %s' % self.projector.syphon_server)
+        self.app = tk.Label(self.info, text='App: %s' % self.projector.app)
 
-        self.group_label.pack(side='left', expand=True)
-        self.group.pack(side="right", fill="both", expand=True)
-
-    def change_group(self, *args):
-        print(self.selected_group.get())
+        self.host_ip.pack(side='top', fill='both', expand=True)
+        self.position.pack(side='top', fill='both', expand=True)
+        self.checker_app.pack(side='top', fill='both', expand=True)
+        self.port.pack(side='top', fill='both', expand=True)
+        self.syphon_server.pack(side='top', fill='both', expand=True)
+        self.app.pack(side='top', fill='both', expand=True)
+        self.info.pack(side='top', fill='both', expand=True)
 
 
 class HostFrame(tk.Frame):
@@ -52,7 +60,7 @@ class HostFrame(tk.Frame):
         self.conection_label.pack(side='top', fill='both', expand=True)
 
     def show_files(self, current_group):
-        host_folder = os.path.join(current_group, self.host.number)
+        host_folder = os.path.join(current_group, str(self.host.number))
         self.files_label['text'] = 'Files at %s' % host_folder
         path_to_host_folder = os.path.join(basepath, host_folder)
         files_only_on_this_host = self.host.list_files(path_to_host_folder)
@@ -69,11 +77,10 @@ class HostFrame(tk.Frame):
             for name in files_on_all_hosts:
                 if not name.startswith('.') and name != 'Readme.md':
                     self.files.insert('end', name)
-            
 
     def set_connection(self):
         time = datetime.now().time().replace(microsecond=0)
-        if self.host.rechable():
+        if self.host.reachable():
             text = 'Reachable\n(last checked: %s)' % time
             color = 'green'
         else:
@@ -97,8 +104,10 @@ class MutationGui(tk.Frame):
 
         self.main_control_panel = tk.Frame(self.main_window)
         self.hosts_control_panel = tk.Frame(self.main_window)
+        self.projector_control_panel = tk.Frame(self.main_window)
         self.main_control_panel.pack(side='top', fill='x', expand=False)
-        self.hosts_control_panel.pack(side='bottom', fill='both', expand=False)
+        self.hosts_control_panel.pack(side='top', fill='both', expand=False)
+        self.projector_control_panel.pack(side='top', fill='both', expand=False)
 
         self.group_label = tk.Label(self.main_control_panel, text='Select group: ')
         self.selected_group = tk.StringVar(self.main_control_panel)
@@ -106,20 +115,31 @@ class MutationGui(tk.Frame):
         self.group = tk.OptionMenu(self.main_control_panel, self.selected_group, *groups)
         self.update_button = tk.Button(self.main_control_panel, text='Update', command=self.update)
         self.check_connection_button = tk.Button(self.main_control_panel, text='Check connections', command=self.check_connections)
+        self.run_or_quit_button = tk.Button(self.main_control_panel, text='Run', command=self.run_or_quit)
+        self.start_syphon_button = tk.Button(self.main_control_panel, text='Start Syphon', command=self.start_syphon)
 
         self.group_label.pack(side='left', expand=True)
         self.group.pack(side="left", fill="x", expand=True)
         self.update_button.pack(side='left', expand=True)
         self.check_connection_button.pack(side='left', expand=True)
+        self.run_or_quit_button.pack(side='left', expand=True)
+        self.start_syphon_button.pack(side='left', expand=True)
 
         self.host_frames = []
 
         for host_number in hosts:
-            ip_addess = hosts[host_number]
-            host = Host(host_number, ip_addess)
+            ip_address = hosts[host_number]['ip_address']
+            host = Host(host_number, ip_address)
             host_frame = HostFrame(self.hosts_control_panel, host)
             host_frame.pack(side='left', fill='both', expand=True)
             self.host_frames.append(host_frame)
+            for projector in hosts[host_number]['projectors']:
+                projector = hosts[host_number]['projectors'][projector]
+                p = Projector(projector['name'], ip_address, projector['position'], projector['checker_app'], projector['port'])
+                projector_frame = ProjectorFrame(self.projector_control_panel, p)
+                projector_frame.pack(side='left', fill='both', expand=True)
+
+        self.running = False
 
     def change_group(self, *args):
         self.logger.info('Changed group to %s' % self.selected_group.get())
@@ -133,16 +153,33 @@ class MutationGui(tk.Frame):
         for host in self.host_frames:
             host.set_connection()
 
+    def run_or_quit(self):
+        group_folder = os.path.join(basepath, self.selected_group.get())
+        self.logger.info('Change directory to %s' % group_folder)
+        os.chdir(group_folder)
+        if self.running:
+            action = 'quit'
+            self.running = False
+            self.run_or_quit_button['text'] = 'Run'
+            self.logger.info('Executing ./project %s' % action)
+            run_shell_command('./project %s' % action)
+        else:
+            action = 'run'
+            self.running = True
+            self.run_or_quit_button['text'] = 'Quit'
+            self.logger.info('Executing ./project %s' % action)
+            run_shell_command('./project %s' % action)
+
+    def start_syphon(self):
+        pass
+
     def update(self):
         # prsync -r -v -o $logOutDir -e $logErrorDir -H "${hosts[*]}" $sourcef $destination
         # see utils...
         # copy_to_all_hosts(files, ip_addresses)
-        host_ips = ' '.join(hosts.values())
+        host_ips = ' '.join([hosts[host]['ip_address'] for host in hosts])
         source = basepath
         destination = basepath[:-1]  # no / in the end!
-        #self.logger.info(run_ssh_command('echo $(pwd)/$line', '192.168.0.10'))
-        #self.logger.info(run_ssh_command('ls', '192.168.0.10'))
-        # TODO: show files in all
         cmd = 'prsync -r -v -H "%s" %s %s' % (host_ips, source, destination)
         self.logger.info(cmd)
         run_shell_command(cmd)
