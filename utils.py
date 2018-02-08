@@ -4,7 +4,6 @@ import logging
 #from pssh.pssh_client import ParallelSSHClient  # pip install parallel-ssh
 #from pssh.utils import enable_logger, logger
 #from gevent import joinall
-from config import sudo_password
 
 #pssh_logger = logger
 #enable_logger(pssh_logger)
