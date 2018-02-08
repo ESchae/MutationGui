@@ -13,6 +13,7 @@ class Host(object):
     def open_screensharing(self):
         command = 'open vnc://%s' % self.ip_address
         self.logger.info('Try to open screen sharing for %s' % self.ip_address)
+        self.logger.info(command)
         run_shell_command(command)
 
     def open_monitor_settings(self):

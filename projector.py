@@ -1,7 +1,8 @@
 from oscsender import send_osc
-from config import basepath
+from config import basepath, desktoppath
+from utils import run_ssh_command
 # from osascript import osascript
-import os
+import os, logging
 
 
 class Projector(object):
@@ -16,12 +17,19 @@ class Projector(object):
         self.syphon_server = syphon_server
         self.app = app
         self.running = False
+        self.logger = logging.getLogger(__name__)
 
     def start_checker_app(self):
-        path = os.path.join(basepath, self.checker_app)
-        osa_script = 'tell application "%s" to activate'
-        #returncode, stdout, stderr = osascript(osa_script)
-        #return returncode, stdout, stderr
+        path = os.path.join(desktoppath, self.checker_app, 'checker3.app')
+        osa_script_lines = ['tell application \\"%s\\"' % path,
+                            'activate',
+                            'tell application \\"System Events\\" to keystroke \\"f\\"',
+                            'end tell']
+        cmd = 'osascript'
+        for osa_script_line in osa_script_lines:
+            cmd += " -e \'%s\'" % osa_script_line
+        self.logger.info(cmd)
+        run_ssh_command(cmd, self.host_ip)
 
     def set_syphon(self, server, app):
         self.start_checker_app()

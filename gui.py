@@ -32,6 +32,9 @@ class ProjectorFrame(tk.Frame):
         self.app.pack(side='top', fill='both', expand=True)
         self.info.pack(side='top', fill='both', expand=True)
 
+    def start_checker_app(self):
+        self.projector.start_checker_app()
+
 
 class HostFrame(tk.Frame):
 
@@ -117,6 +120,7 @@ class MutationGui(tk.Frame):
         self.check_connection_button = tk.Button(self.main_control_panel, text='Check connections', command=self.check_connections)
         self.run_or_quit_button = tk.Button(self.main_control_panel, text='Run', command=self.run_or_quit)
         self.start_syphon_button = tk.Button(self.main_control_panel, text='Start Syphon', command=self.start_syphon)
+        self.start_checker_button = tk.Button(self.main_control_panel, text='Start Checker Apps', command=self.start_checker_apps)
 
         self.group_label.pack(side='left', expand=True)
         self.group.pack(side="left", fill="x", expand=True)
@@ -124,8 +128,10 @@ class MutationGui(tk.Frame):
         self.check_connection_button.pack(side='left', expand=True)
         self.run_or_quit_button.pack(side='left', expand=True)
         self.start_syphon_button.pack(side='left', expand=True)
+        self.start_checker_button.pack(side='left', expand=True)
 
         self.host_frames = []
+        self.projector_frames = []
 
         for host_number in hosts:
             ip_address = hosts[host_number]['ip_address']
@@ -138,6 +144,7 @@ class MutationGui(tk.Frame):
                 p = Projector(projector['name'], ip_address, projector['position'], projector['checker_app'], projector['port'])
                 projector_frame = ProjectorFrame(self.projector_control_panel, p)
                 projector_frame.pack(side='left', fill='both', expand=True)
+                self.projector_frames.append(projector_frame)
 
         self.running = False
 
@@ -183,6 +190,10 @@ class MutationGui(tk.Frame):
         cmd = 'prsync -r -v -H "%s" %s %s' % (host_ips, source, destination)
         self.logger.info(cmd)
         run_shell_command(cmd)
+
+    def start_checker_apps(self):
+        for projector in self.projector_frames:
+            projector.start_checker_app()
         
 
 
