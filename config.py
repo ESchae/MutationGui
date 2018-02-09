@@ -1,4 +1,4 @@
-basepath = '/Users/mutation/Desktop/Mutation2018/'
+basepath = '/Users/mutation/Desktop/Mutation2018Files/'
 desktoppath = '/Users/mutation/Desktop/'
 
 groups = {
@@ -53,13 +53,8 @@ hosts = {
         'ip_address': '192.168.0.12',
         'projectors': {
             0: {
-                'name': 'dummy1',
-                'position': 'oben',
-                'port': 5000,
-            },
-            1: {
-                'name': 'dummy1',
-                'position': 'oben',
+                'name': 'right',
+                'position': 'main',
                 'port': 5000,
             }
         }
@@ -68,8 +63,8 @@ hosts = {
         'ip_address': '192.168.0.13',
         'projectors': {
             0: {
-                'name': 'foh',
-                'position': '-',
+                'name': 'regie',
+                'position': 'main',
                 'port': 5000,
             }
         }
@@ -78,14 +73,14 @@ hosts = {
         'ip_address': '192.168.0.14',
         'projectors': {
             0: {
-                'name': 'neben foh',
-                'position': 'links',
+                'name': 'ceiling',
+                'position': 'right-screen',
                 'port': 5000,
             },
             1: {
-                'name': 'decke',
-                'position': 'rechts',
-                'port': 5000,
+                'name': 'left-front',
+                'position': 'left-screen',
+                'port': 5001,
             }
         }
     },
@@ -93,14 +88,14 @@ hosts = {
         'ip_address': '192.168.0.15',
         'projectors': {
             0: {
-                'name': 'treppe',
-                'position': 'oben',
+                'name': 'stairs',
+                'position': 'right-screen',
                 'port': 5000,
             },
             1: {
-                'name': 'links von L',
-                'position': 'oben',
-                'port': 5000,
+                'name': 'right-front',
+                'position': 'left-screen',
+                'port': 5001,
             }
         }
     }

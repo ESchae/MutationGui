@@ -21,7 +21,8 @@ class ProjectorFrame(tk.Frame):
         self.position = tk.Label(self.info, text='Position: %s' % self.projector.position)
         self.port = tk.Label(self.info, text='Checker Port: %s' % self.projector.port)
         self.syphon_server = tk.Label(self.info, text='Syphon: %s' % self.projector.syphon_server)
-        self.app = tk.Label(self.info, text='App: %s' % self.projector.app)
+        app_name = os.path.split(self.projector.app)[1]
+        self.app = tk.Label(self.info, text='App: %s' % app_name)
         # self.use_checker = tk.Label(self.info, text='Use checker: %s' % self.projector.use_checker)
 
         #self.host_ip.pack(side='top', fill='x', expand=True)
@@ -33,7 +34,7 @@ class ProjectorFrame(tk.Frame):
         # self.use_checker.pack(side='top', fill='both', expand=True)
 
     def start_checker_app(self):
-        self.projector.run_application(self.projector.checker_app)
+        self.projector.run_application(self.projector.checker_app, press_keys=['f', 'g'])
 
     def quit_checker_app(self):
         self.projector.quit_application(self.projector.checker_app)
@@ -48,7 +49,8 @@ class ProjectorFrame(tk.Frame):
 
     def update_labels(self, current_group):
         self.projector.set_config_for_group(current_group)
-        self.app['text'] = 'App: %s' % self.projector.app
+        app_name = os.path.split(self.projector.app)[1]
+        self.app['text'] = 'App: %s' % app_name
         self.syphon_server['text'] = 'Syphon: %s' % self.projector.syphon_server
         # self.use_checker['text'] = 'Use checker: %s' % self.projector.use_checker
 
@@ -69,7 +71,7 @@ class HostFrame(tk.Frame):
         #self.files_label = tk.Label(self, text='Files at ')
 
         # show connection info
-        self.conection_label = tk.Label(self, text='__check connection__')
+        self.conection_label = tk.Label(self, text='')
 
         self.label.pack(side='top', fill='x', expand=True)
         #self.files_label.pack(side='top', fill='x', expand=True)
@@ -135,7 +137,7 @@ class MutationGui(tk.Frame):
         self.group = tk.OptionMenu(self.main_control_panel, self.selected_group, *groups)
         self.update_button = tk.Button(self.main_control_panel, text='Update Files on Hosts', command=self.update)
         self.check_connection_button = tk.Button(self.main_control_panel, text='Check connections', command=self.check_connections)
-        self.run_or_quit_app_button = tk.Button(self.main_control_panel, text='Run Apps', command=self.run_or_quit_app)
+        self.run_or_quit_app_button = tk.Button(self.main_control_panel, text='Run Apps', command=self.run_or_quit_apps)
         self.start_syphon_button = tk.Button(self.main_control_panel, text='Start Syphon', command=self.start_syphon)
         self.start_checker_button = tk.Button(self.main_control_panel, text='Start Checker Apps', command=self.start_or_quit_checker_apps)
         #self.start_app_button = tk.Button(self.main_control_panel, text='Start App', command=self.start_app)
@@ -168,6 +170,7 @@ class MutationGui(tk.Frame):
         self.running = False
         self.checker_running = False
         self.selected_group.set('TeamTest')
+        self.check_connections()
 
     def change_group(self, *args):
         group = self.selected_group.get()
@@ -195,7 +198,7 @@ class MutationGui(tk.Frame):
         for host in self.host_frames:
             host.set_connection()
 
-    def run_or_quit_app(self):
+    def run_or_quit_apps(self):
         if self.running:
             self.quit_apps()
             self.running = False
@@ -233,30 +236,32 @@ class MutationGui(tk.Frame):
         for projector_frame in self.projector_frames:
             projector_frame.quit_app()
 
+    def start_checker_apps(self):
+        for projector_frame in self.projector_frames:
+            projector_frame.start_checker_app()
+            # time.sleep(1)
+
+    def quit_checker_apps(self):
+        for projector_frame in self.projector_frames:
+            projector_frame.quit_checker_app()
 
     def update(self):
-        # prsync -r -v -o $logOutDir -e $logErrorDir -H "${hosts[*]}" $sourcef $destination
-        # see utils...
-        # copy_to_all_hosts(files, ip_addresses)
-        # TODO: With new folder structure
         host_ips = ' '.join([hosts[host]['ip_address'] for host in hosts])
         source = basepath
         destination = basepath[:-1]  # no / in the end!
         cmd = 'prsync -r -v -H "%s" %s %s' % (host_ips, source, destination)
         self.logger.info(cmd)
         run_shell_command(cmd)
-        self.update_host_frames()  # list new files
 
     def start_or_quit_checker_apps(self):
-        for projector_frame in self.projector_frames:
-            if self.checker_running:
-                projector_frame.quit_checker_app()
-                self.checker_running = False
-                self.start_checker_button['text'] = 'Start Checker Apps'
-            else:
-                projector_frame.start_checker_app()
-                self.checker_running = True
-                self.start_checker_button['text'] = 'Quit Checker Apps'
+        if self.checker_running:
+            self.quit_checker_apps()
+            self.checker_running = False
+            self.start_checker_button['text'] = 'Start Checker Apps'
+        else:
+            self.start_checker_apps()
+            self.checker_running = True
+            self.start_checker_button['text'] = 'Quit Checker Apps'
 
 
 if __name__ == "__main__":
