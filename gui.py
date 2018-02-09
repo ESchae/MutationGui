@@ -259,6 +259,7 @@ class MutationGui(tk.Frame):
             self.checker_running = False
             self.start_checker_button['text'] = 'Start Checker Apps'
         else:
+            self.quit_checker_apps()  # quit any previously running checker apps
             self.start_checker_apps()
             self.checker_running = True
             self.start_checker_button['text'] = 'Quit Checker Apps'
