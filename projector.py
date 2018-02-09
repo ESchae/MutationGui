@@ -33,9 +33,6 @@ class Projector(object):
         except KeyError:
             self.logger.warning("Could not find %s's configuration for %s" % (group, self.name))
 
-    def start_checker_app(self):
-        self.run_application(self.checker_app)
-
     def run_application(self, path_to_app, fullscreen=True):
         self.logger.info('Try to run %s on %s (%s)' % (path_to_app, self.host_ip, self.position))
         run_ssh_command('open %s' % path_to_app, self.host_ip)
@@ -45,6 +42,11 @@ class Projector(object):
         if self.position == 'right-screen':
             cmd = "osascript %s" % os.path.join(desktoppath, "move_to_right_screen.scpt")
             run_ssh_command(cmd, self.host_ip)
+
+    def quit_application(self, path_to_app):
+        self.logger.info('Try to quit %s on %s (%s)' % (path_to_app, self.host_ip, self.position))
+        cmd = """osascript -e 'quit app \\"%s\\"'""" % path_to_app
+        run_ssh_command(cmd, self.host_ip)
 
     def set_syphon(self, server, app):
         self.start_checker_app()
