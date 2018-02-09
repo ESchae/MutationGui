@@ -18,6 +18,7 @@ def run_shell_command(command):
     and restart, hence the following was done on all hosts:
 
     $ sudo chmod u+s /sbin/shutdown
+    $ sudo chmod u+s /sbin/reboot
 
     This allows regular users to run the shutdown command as root.
 
@@ -32,6 +33,7 @@ def run_shell_command(command):
     :return:
     """
     try:
+        logger.debug('Try to execute %s' % command)
         process = subprocess.Popen(shlex.split(command),
                                    shell=False,
                                    stdout=subprocess.PIPE,
@@ -62,8 +64,9 @@ def run_ssh_command(command, ip_address):
     """
     # -tt is needed because stdin is not a terminal
     # -o ConnectTimeout=2 lets ssh wait only two seconds for the connection
-    command = 'ssh -tt -o ConnectTimeout=2 %s "%s"' % (ip_address, command)
+    command = 'ssh -tt -o ConnectTimeout=1 %s "%s"' % (ip_address, command)
     return run_shell_command(command)
+
 
 """
 def copy_to_all_hosts(files, ip_addresses):

@@ -2,11 +2,11 @@ import Tkinter as tk
 from config import hosts, groups, basepath
 from host import Host
 from projector import Projector
-import logging, os
+import logging, os, time
 from datetime import datetime
 from utils import run_shell_command, run_ssh_command
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.DEBUG)
 
 
 class ProjectorFrame(tk.Frame):
@@ -19,21 +19,31 @@ class ProjectorFrame(tk.Frame):
         self.info = tk.LabelFrame(self, text='Projector: %s' % projector.name)
         self.host_ip = tk.Label(self.info, text='Host: %s' % self.projector.host_ip)
         self.position = tk.Label(self.info, text='Position: %s' % self.projector.position)
-        self.checker_app = tk.Label(self.info, text='Checkerapp: %s' % self.projector.checker_app)
         self.port = tk.Label(self.info, text='Checkerapp port: %s' % self.projector.port)
         self.syphon_server = tk.Label(self.info, text='Syphon server: %s' % self.projector.syphon_server)
         self.app = tk.Label(self.info, text='App: %s' % self.projector.app)
+        self.use_checker = tk.Label(self.info, text='Use checker: %s' % self.projector.use_checker)
 
         self.host_ip.pack(side='top', fill='both', expand=True)
         self.position.pack(side='top', fill='both', expand=True)
-        self.checker_app.pack(side='top', fill='both', expand=True)
         self.port.pack(side='top', fill='both', expand=True)
         self.syphon_server.pack(side='top', fill='both', expand=True)
         self.app.pack(side='top', fill='both', expand=True)
         self.info.pack(side='top', fill='both', expand=True)
+        self.use_checker.pack(side='top', fill='both', expand=True)
 
     def start_checker_app(self):
         self.projector.start_checker_app()
+    
+    def start_app(self):
+        path = self.projector.app
+        self.projector.run_application(path)
+
+    def update_labels(self, current_group):
+        self.projector.set_config_for_group(current_group)
+        self.app['text'] = 'App: %s' % self.projector.app
+        self.syphon_server['text'] = 'Syphon_server: %s' % self.projector.syphon_server
+        self.use_checker['text'] = 'Use checker: %s' % self.projector.use_checker
 
 
 class HostFrame(tk.Frame):
@@ -121,6 +131,7 @@ class MutationGui(tk.Frame):
         self.run_or_quit_button = tk.Button(self.main_control_panel, text='Run', command=self.run_or_quit)
         self.start_syphon_button = tk.Button(self.main_control_panel, text='Start Syphon', command=self.start_syphon)
         self.start_checker_button = tk.Button(self.main_control_panel, text='Start Checker Apps', command=self.start_checker_apps)
+        self.start_app_button = tk.Button(self.main_control_panel, text='Start App', command=self.start_app)
 
         self.group_label.pack(side='left', expand=True)
         self.group.pack(side="left", fill="x", expand=True)
@@ -129,6 +140,7 @@ class MutationGui(tk.Frame):
         self.run_or_quit_button.pack(side='left', expand=True)
         self.start_syphon_button.pack(side='left', expand=True)
         self.start_checker_button.pack(side='left', expand=True)
+        self.start_app_button.pack(side='left', expand=True)
 
         self.host_frames = []
         self.projector_frames = []
@@ -139,22 +151,28 @@ class MutationGui(tk.Frame):
             host_frame = HostFrame(self.hosts_control_panel, host)
             host_frame.pack(side='left', fill='both', expand=True)
             self.host_frames.append(host_frame)
-            for projector in hosts[host_number]['projectors']:
+            for projector in sorted(hosts[host_number]['projectors']):
                 projector = hosts[host_number]['projectors'][projector]
-                p = Projector(projector['name'], ip_address, projector['position'], projector['checker_app'], projector['port'])
+                p = Projector(projector['name'], ip_address, projector['position'], projector['port'])
                 projector_frame = ProjectorFrame(self.projector_control_panel, p)
                 projector_frame.pack(side='left', fill='both', expand=True)
                 self.projector_frames.append(projector_frame)
 
         self.running = False
+        self.selected_group.set('TeamTest')
 
     def change_group(self, *args):
         self.logger.info('Changed group to %s' % self.selected_group.get())
         self.update_host_frames()
+        self.update_projector_frames()
 
     def update_host_frames(self):
         for host_frame in self.host_frames:
             host_frame.show_files(self.selected_group.get())
+
+    def update_projector_frames(self):
+        for projector_frame in self.projector_frames:
+            projector_frame.update_labels(self.selected_group.get())
 
     def check_connections(self):
         for host in self.host_frames:
@@ -179,6 +197,10 @@ class MutationGui(tk.Frame):
 
     def start_syphon(self):
         pass
+    
+    def start_app(self):
+        for projector_frame in self.projector_frames:
+            projector_frame.start_app()
 
     def update(self):
         # prsync -r -v -o $logOutDir -e $logErrorDir -H "${hosts[*]}" $sourcef $destination
@@ -190,11 +212,12 @@ class MutationGui(tk.Frame):
         cmd = 'prsync -r -v -H "%s" %s %s' % (host_ips, source, destination)
         self.logger.info(cmd)
         run_shell_command(cmd)
+        self.update_host_frames()  # list new files
 
     def start_checker_apps(self):
-        for projector in self.projector_frames:
-            projector.start_checker_app()
-        
+        for projector_frame in self.projector_frames:
+            self.logger.info('Starting app on %s' % projector_frame.projector.name)
+            projector_frame.start_checker_app()
 
 
 if __name__ == "__main__":

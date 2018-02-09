@@ -1,27 +1,51 @@
-
-groups = ['TeamTest', 'Alessandro', 'MarninTobi']
-
 basepath = '/Users/mutation/Desktop/Mutation2018/'
 desktoppath = '/Users/mutation/Desktop/'
 
+groups = {
+    'TeamTest': {
+        # globals
+        'use_checker': True,
+        # for each projector, specify which app should be run
+        'projector_settings': {
+            'top': {
+                'app': 'xy.app',
+                'syphon_server': '123'
+            }
+        }
+    },
+    'MarninTobi': {
+        # globals
+        'use_checker': False,
+        # for each projector, specify which app should be run
+        'projector_settings': {
+            'top': {
+                'app': 'xy.app',
+                'syphon_server': None
+            }
+        }
+    }
+}
+
 # projector name = name to describe its shape /find it in MUT
 # projector position = monitor position
+# important note: name of corresponding checker app for a specific projector will be
+# derived as follows: checker_<name>_<position>/checker3.app !
+
+# right-screen must be listed before left-screen!
 
 hosts = {
     10: {
         'ip_address': '192.168.0.10',
         'projectors': {
             0: {
-                'name': 'L',
-                'position': 'left',
-                'checker_app': 'checker-0-L',
+                'name': 'top',
+                'position': 'right-screen',
                 'port': 5000,
             },
             1: {
-                'name': 'Hoechstes Gelaender',
-                'position': 'rechts',
-                'checker_app': 'checker-1-Oben',
-                'port': 5010,
+                'name': 'L',
+                'position': 'left-screen',
+                'port': 5001,
             }
         }
     },
@@ -31,13 +55,11 @@ hosts = {
             0: {
                 'name': 'dummy1',
                 'position': 'oben',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             },
             1: {
                 'name': 'dummy1',
                 'position': 'oben',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             }
         }
@@ -48,7 +70,6 @@ hosts = {
             0: {
                 'name': 'foh',
                 'position': '-',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             }
         }
@@ -59,13 +80,11 @@ hosts = {
             0: {
                 'name': 'neben foh',
                 'position': 'links',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             },
             1: {
                 'name': 'decke',
                 'position': 'rechts',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             }
         }
@@ -76,13 +95,11 @@ hosts = {
             0: {
                 'name': 'treppe',
                 'position': 'oben',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             },
             1: {
                 'name': 'links von L',
                 'position': 'oben',
-                'checker_app': 'Checker-0-L',
                 'port': 5000,
             }
         }
