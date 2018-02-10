@@ -13,10 +13,10 @@ class Projector(object):
         self.crop = crop
         # derive path to corresponding checker app
         if self.position == 'right-screen':
-            self.checker_app = os.path.join(basepath, 'BetterChecker3000_v2.app')
+            self.checker_app = os.path.join(desktoppath, 'BetterChecker3000_v2.app')
             self.port = 40100
         else:  # left-screen or main
-            self.checker_app = os.path.join(basepath, 'BetterChecker3000_v1.app')
+            self.checker_app = os.path.join(desktoppath, 'BetterChecker3000_v1.app')
             self.port = 40000
         # the following attributes will be set individually for each group
         self.app = ''
