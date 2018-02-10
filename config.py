@@ -18,9 +18,16 @@ desktoppath = '/Users/mutation/Desktop/'
 # MarninTobi could specify 'play_me_on_all_hosts.app' as app for all
 # projectors
 
+
+# Note on syphon server app name:
+# It is assumed that the app name is the same like the app name given
+# in "app", e.g. for an app called /test/mycinder.app the cynder app name
+# should be mycinder
+
 groups = {
     'TeamTest': {
         'use_checker': True,
+        'video': False,
         # for each projector, specify which app should be run
         'projector_settings': {
             'top': {
@@ -59,152 +66,156 @@ groups = {
     },
     'MarninTobi': {
         'use_checker': False,
+        'video': False,
         # for each projector, specify which app should be run
         'projector_settings': {
             'top': {
-                'app': 'xy.app',
+                'app': 'Test02_v2.app',
                 'syphon_server': ''
             },
             'L': {
-                'app': 'x.app',
+                'app': 'Test02_v1.app',
                 'syphon_server': ''
             },
             'right': {
-                'app': 'xy.app',
+                'app': 'Test02_v1.app',
                 'syphon_server': ''
             },
             'regie': {
-                'app': 'x.app',
+                'app': 'Test02_v1.app',
                 'syphon_server': ''
             },
             'ceiling': {
-                'app': 'xy.app',
+                'app': 'Test02_v2.app',
                 'syphon_server': ''
             },
             'left-front': {
-                'app': 'x.app',
+                'app': 'Test02_v1.app',
                 'syphon_server': ''
             },
             'stairs': {
-                'app': 'xy.app',
+                'app': 'Test02_v2.app',
                 'syphon_server': ''
             },
             'right-front': {
-                'app': 'x.app',
+                'app': 'Test02_v1.app',
                 'syphon_server': ''
             }
         }
     },
     'Alessandro': {
         'use_checker': True,
+        'video': False,
         # for each projector, specify which app should be run
         'projector_settings': {
             'top': {
-                'app': 'xy.app',
-                'syphon_server': ''
+                'app': '10/Screen1/CinderProject.app',
+                'syphon_server': 'screen1'
             },
             'L': {
-                'app': 'x.app',
-                'syphon_server': ''
+                'app': '10/Screen2/CinderProject.app',
+                'syphon_server': 'screen2'
             },
             'right': {
-                'app': 'xy.app',
-                'syphon_server': ''
+                'app': '12/Screen1/CinderProject.app',
+                'syphon_server': 'screen1'
             },
             'regie': {
-                'app': 'x.app',
-                'syphon_server': ''
+                'app': '13/Screen1/CinderProject.app',
+                'syphon_server': 'screen1'
             },
             'ceiling': {
-                'app': 'xy.app',
-                'syphon_server': ''
+                'app': '14/Screen1/CinderProject.app',
+                'syphon_server': 'screen1'
             },
             'left-front': {
-                'app': 'x.app',
-                'syphon_server': ''
+                'app': '14/Screen2/CinderProject.app',
+                'syphon_server': 'screen2'
             },
             'stairs': {
-                'app': 'xy.app',
-                'syphon_server': ''
+                'app': '15/Screen1/CinderProject.app',
+                'syphon_server': 'screen1'
             },
             'right-front': {
-                'app': 'x.app',
-                'syphon_server': ''
+                'app': '15/Screen2/CinderProject.app',
+                'syphon_server': 'screen2'
             }
         }
     },
     'Vanessa': {
         'use_checker': True,
+        'video': True,
         # for each projector, specify which app should be run
         'projector_settings': {
             'top': {
-                'app': 'xy.app',
+                'app': '',
                 'syphon_server': ''
             },
             'L': {
-                'app': 'x.app',
+                'app': '',
                 'syphon_server': ''
             },
             'right': {
-                'app': 'xy.app',
+                'app': 'Dancer_1.mp4',
                 'syphon_server': ''
             },
             'regie': {
-                'app': 'x.app',
+                'app': 'Dancer_2.mp4',
                 'syphon_server': ''
             },
             'ceiling': {
-                'app': 'xy.app',
+                'app': '',
                 'syphon_server': ''
             },
             'left-front': {
-                'app': 'x.app',
+                'app': 'Dancer_3.mp4',
                 'syphon_server': ''
             },
             'stairs': {
-                'app': 'xy.app',
+                'app': '',
                 'syphon_server': ''
             },
             'right-front': {
-                'app': 'x.app',
+                'app': 'Dancer_4.mp4',
                 'syphon_server': ''
             }
         }
     },
     'Tim': {
         'use_checker': True,
+        'video': False,
         # for each projector, specify which app should be run
         'projector_settings': {
             'top': {
-                'app': 'xy.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'L': {
-                'app': 'x.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'right': {
-                'app': 'xy.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'regie': {
-                'app': 'x.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'ceiling': {
-                'app': 'xy.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'left-front': {
-                'app': 'x.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'stairs': {
-                'app': 'xy.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             },
             'right-front': {
-                'app': 'x.app',
+                'app': 'Mutationfinished/example-BasicCopied.app',
                 'syphon_server': ''
             }
         }
@@ -242,6 +253,9 @@ groups = {
 # * script taken from
 # https://apple.stackexchange.com/questions/136324/moving-finder-window-from-one-display-to-another
 
+# BetterChecker3000_v1 = left screen (uses port 40000 for OSC)
+# BetterChecker3000_v2 = right screen (uses port 40100 for OSC)
+
 
 hosts = {
     10: {
@@ -250,12 +264,12 @@ hosts = {
             0: {
                 'name': 'top',
                 'position': 'right-screen',
-                'port': 5000,
+                'crop': 0.0,
             },
             1: {
                 'name': 'L',
                 'position': 'left-screen',
-                'port': 5001,
+                'crop': 0.0,
             }
         }
     },
@@ -265,7 +279,7 @@ hosts = {
             0: {
                 'name': 'right',
                 'position': 'main',
-                'port': 5000,
+                'crop': 0.0,
             }
         }
     },
@@ -275,7 +289,7 @@ hosts = {
             0: {
                 'name': 'regie',
                 'position': 'main',
-                'port': 5000,
+                'crop': 0.0,
             }
         }
     },
@@ -285,12 +299,12 @@ hosts = {
             0: {
                 'name': 'ceiling',
                 'position': 'right-screen',
-                'port': 5000,
+                'crop': 0.0,
             },
             1: {
                 'name': 'left-front',
                 'position': 'left-screen',
-                'port': 5001,
+                'crop': 0.0,
             }
         }
     },
@@ -300,12 +314,12 @@ hosts = {
             0: {
                 'name': 'stairs',
                 'position': 'right-screen',
-                'port': 5000,
+                'crop': 0.0,
             },
             1: {
                 'name': 'right-front',
                 'position': 'left-screen',
-                'port': 5001,
+                'crop': 0.0,
             }
         }
     }

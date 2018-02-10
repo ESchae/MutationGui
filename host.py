@@ -33,13 +33,18 @@ class Host(object):
 
     def shutdown(self):
         command = 'sudo shutdown -h now'
-        self.logger.info('Goint to shutdown %s' % self.ip_address)
-        run_ssh_command(command, self.ip_address)
+        self.logger.info('Goint to shutdown %s - Type Password in Terminal Prompt!' % self.ip_address)
+        run_ssh_command(command, self.ip_address, sudo=True)
 
     def restart(self):
         command = 'sudo shutdown -r now'
-        self.logger.info('Goint to restart %s' % self.ip_address)
-        run_ssh_command(command, self.ip_address)
+        self.logger.info('Goint to restart %s - Type Password in Terminal Prompt!' % self.ip_address)
+        run_ssh_command(command, self.ip_address, sudo=True)
+    
+    def quit_any_apps(self, number=4):
+        for x in range(number):
+            cmd = """osascript -e 'tell application \\"System Events\\" to keystroke \\"q\\" using command down'"""
+            run_ssh_command(cmd, self.ip_address)
 
     def reachable(self):
         """

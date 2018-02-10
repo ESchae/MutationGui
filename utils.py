@@ -1,6 +1,6 @@
 import subprocess
 import shlex, errno
-import logging
+import logging, time
 #from pssh.pssh_client import ParallelSSHClient  # pip install parallel-ssh
 #from pssh.utils import enable_logger, logger
 #from gevent import joinall
@@ -12,15 +12,6 @@ logger = logging.getLogger(__name__)  # general purpose logger
 
 def run_shell_command(command):
     """
-
-    Note: This will not work for commands that need to be executed with
-    root privileges (using sudo). For Mutation this is only true for shutdown
-    and restart, hence the following was done on all hosts:
-
-    $ sudo chmod u+s /sbin/shutdown
-    $ sudo chmod u+s /sbin/reboot
-
-    This allows regular users to run the shutdown command as root.
 
     >>> out, err = run_shell_command('echo test')
     >>> print(out)
@@ -51,7 +42,7 @@ def run_shell_command(command):
         return '%s is no valid command' % command
 
 
-def run_ssh_command(command, ip_address):
+def run_ssh_command(command, ip_address, sudo=False):
     """
 
     # TODO: Try those
@@ -64,7 +55,11 @@ def run_ssh_command(command, ip_address):
     """
     # -tt is needed because stdin is not a terminal
     # -o ConnectTimeout=2 lets ssh wait only two seconds for the connection
-    command = 'ssh -tt -o ConnectTimeout=1 %s "%s"' % (ip_address, command)
+    if sudo:
+        # -t is used to show the password promt in terminal
+        command = 'ssh -tt -t -o ConnectTimeout=1 %s "%s"' % (ip_address, command)
+    else:
+        command = 'ssh -tt -t -o ConnectTimeout=1 %s "%s"' % (ip_address, command)
     return run_shell_command(command)
 
 

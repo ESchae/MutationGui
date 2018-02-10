@@ -1,10 +1,10 @@
-# import OSC  # pip install pyOSC
+import OSC  # pip install pyOSC
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-def send_osc(ip_address, port, message):
+def send_osc(ip_address, port, address, arguments):
     """ Send an osg message to the host with given ip_address on given port.
 
     >>> send_osc('127.0.0.1', 22, '/test 1 2')
@@ -15,8 +15,9 @@ def send_osc(ip_address, port, message):
     :return:
     """
     msg = OSC.OSCMessage()
-    msg.setAddress(message[0])  # the osc command starting with /...
-    msg.append(' '.join(message[1:]))  # the corresponding arguments
+    msg.setAddress(address)
+    for argument in arguments:
+        msg.append(argument)
 
     osc_client = OSC.OSCClient()
     osc_client.connect((ip_address, port))
