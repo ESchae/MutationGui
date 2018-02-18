@@ -108,7 +108,7 @@ class HostFrame(tk.Frame):
             text = 'Reachable\n(last checked: %s)' % time
             color = 'green'
         else:
-            text = 'Unrechable\n(last checked: %s)' % time
+            text = 'Unreachable\n(last checked: %s)' % time
             color = 'red'
         self.connection_label['text'] = text
         self.connection_label['fg'] = color
