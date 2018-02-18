@@ -7,11 +7,12 @@ logger = logging.getLogger(__name__)
 def send_osc(ip_address, port, address, arguments):
     """ Send an osg message to the host with given ip_address on given port.
 
-    >>> send_osc('127.0.0.1', 22, '/test 1 2')
+    >>> send_osc('127.0.0.1', 22, '/test', [1, 2])
 
-    :param ip_address:
-    :param port:
-    :param message:
+    :param (str) ip_address: Ip address of osc host.
+    :param (int) port: Port of osc host.
+    :param (str) address: Beginning of osc message, starting with '/'
+    :param (list) arguments: The arguments for the osc message.
     :return:
     """
     msg = OSC.OSCMessage()
