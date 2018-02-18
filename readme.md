@@ -35,6 +35,8 @@ Furthermore, to enable host communication via ssh, ssh-keys must be generated
 for all hosts. This was done using 
 [this instruction](https://www.digitalocean.com/community/tutorials/how-to-set-up-ssh-keys--2).
 
+To be able to update the files on all hosts prsync must be installed.
+
 Note that you should have the BetterChecker3000 App v1, and if there 
 is second projector also v2, on every host's Desktop. 
 Moreover on the main computer on the path given in config.py as basepath
