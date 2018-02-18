@@ -173,6 +173,7 @@ class Projector(object):
             time.sleep(0.5)
 
     def quit_app(self, path_to_app):
+        # TODO: quit app and checker_app if self.user_checker is True
         self.logger.info(
             'Try to quit %s on %s (%s)'
             % (path_to_app, self.host_ip, self.position))
