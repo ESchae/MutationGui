@@ -12,8 +12,8 @@ class Host(object):
     def __init__(self, number, ip_address):
         """ Initialisation of a host.
 
-        :param number (int): Any number used to identify the host in MUT.
-        :param ip_address (str): Ip address of the host.
+        :param (int) number: Any number used to identify the host in MUT.
+        :param (str) ip_address: Ip address of the host.
         """
         self.ip_address = ip_address
         self.number = number
