@@ -46,11 +46,13 @@ class Host(object):
     def shutdown(self):
         command = 'sudo shutdown -h now'
         self.logger.info('Goint to shutdown %s' % self.ip_address)
+        self.logger.warning('Shutdown command not working! - See Readme')
         run_ssh_command(command, self.ip_address, sudo=True)
 
     def restart(self):
         command = 'sudo shutdown -r now'
         self.logger.info('Goint to restart %s' % self.ip_address)
+        self.logger.warning('Restart command not working! - See Readme')
         run_ssh_command(command, self.ip_address, sudo=True)
     
     def quit_any_apps(self, number=4):
