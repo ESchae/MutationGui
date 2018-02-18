@@ -57,9 +57,6 @@ class ProjectorFrame(tk.Frame):
     def quit_app(self):
         path = self.projector.app
         self.projector.quit_application(path)
-    
-    def send_syphon(self):
-        self.projector.send_syphon()
 
     def update_labels(self, current_group):
         self.projector.set_config_for_group(current_group)
@@ -240,11 +237,6 @@ class MutationGui(tk.Frame):
         group = self.selected_group.get()
         osc_msg = '/mutation/start/%s' % group
         send_osc("127.0.0.1", 57120, osc_msg, [])
-
-    def send_syphon(self):
-        self.logger.info('Sending syphon info to all projectors')
-        for projector_frame in self.projector_frames:
-            projector_frame.send_syphon()
     
     def start_apps(self):
         for projector_frame in self.projector_frames:
