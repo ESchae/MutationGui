@@ -8,7 +8,7 @@ import logging
 import time
 from oscsender import send_osc
 from config import basepath, desktoppath, groups
-from utils import run_ssh_command
+from bash import run_ssh_command
 
 
 class Projector(object):
