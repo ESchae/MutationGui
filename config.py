@@ -28,10 +28,10 @@ basepath = '/Users/mutation/Desktop/Mutation2018Files/'
 # projectors
 #
 #
-# Note on syphon server app name:
+# IMPORTANT NOTE on syphon server app name:
 # It is assumed that the app name is the same like the app name given
 # in "app", e.g. for an app called /test/mycinder.app the syphon app name
-# should be mycinder
+# should be mycinder (see usage in projector.py method send_syphon()
 #
 # IMPORTANT NOTE: Syphon server setting could not be tested completely yet
 # with the BetterChecker3000 App (see e.g. Alessandro's group settings)
