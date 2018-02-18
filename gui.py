@@ -11,7 +11,7 @@ from config import hosts, groups, basepath
 from host import Host
 from projector import Projector
 from datetime import datetime
-from utils import run_shell_command
+from bash import run_shell_command
 from oscsender import send_osc
 
 
