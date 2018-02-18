@@ -88,9 +88,9 @@ class HostFrame(tk.Frame):
         self.label = tk.Label(
             self, text='Mutation %s %s' % (host.number, host.ip_address))
         self.shutdown_button = tk.Button(
-            self, text='Shutdown [Not working]', command=host.shutdown)
+            self, text='Shutdown', command=host.shutdown)
         self.restart_button = tk.Button(
-            self, text='Restart [Not working]', command=host.restart)
+            self, text='Restart', command=host.restart)
         self.screenshare_button = tk.Button(
             self, text='Open Screenshare', command=host.open_screensharing)
         self.connection_label = tk.Label(self, text='')
