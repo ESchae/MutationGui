@@ -4,7 +4,7 @@ Copyright 2018
 Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
 """
 import logging
-from utils import run_shell_command, run_ssh_command
+from bash import run_shell_command, run_ssh_command
 
 
 class Host(object):
