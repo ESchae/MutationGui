@@ -1,26 +1,38 @@
+""" Module for functionality belonging to mutation hosts.
+
+Copyright 2018
+Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
+"""
 import logging
 from utils import run_shell_command, run_ssh_command
 
 
 class Host(object):
 
-    def __init__(self, number, ip_address, projectors=None):
+    def __init__(self, number, ip_address):
+        """ Initialisation of a host.
+
+        :param number (int): Any number used to identify the host in MUT.
+        :param ip_address (str): Ip address of the host.
+        """
         self.ip_address = ip_address
         self.number = number
-        self.projectors = projectors
         self.logger = logging.getLogger(__name__)
 
     def open_screensharing(self):
         command = 'open vnc://%s' % self.ip_address
         self.logger.info('Try to open screen sharing for %s' % self.ip_address)
-        self.logger.info(command)
         run_shell_command(command)
 
-    def open_monitor_settings(self):
-        # run applescript
-        pass
-
     def list_files(self, path):
+        """ List files found at given path on host.
+
+        This method was used while the idea was to have not all files on every
+        host. Since one and the same file folder is synchronized with every
+        host, it is no longer used. It was still not deleted, as it might be
+        desirable in the future to be able to list files on a specific path
+        for a given host, e.g. for debugging purposes.
+        """
         command = 'ls %s' % path
         self.logger.info('Listing files at %s' % path)
         out, error = run_ssh_command(command, self.ip_address)
@@ -33,12 +45,12 @@ class Host(object):
 
     def shutdown(self):
         command = 'sudo shutdown -h now'
-        self.logger.info('Goint to shutdown %s - Type Password in Terminal Prompt!' % self.ip_address)
+        self.logger.info('Goint to shutdown %s' % self.ip_address)
         run_ssh_command(command, self.ip_address, sudo=True)
 
     def restart(self):
         command = 'sudo shutdown -r now'
-        self.logger.info('Goint to restart %s - Type Password in Terminal Prompt!' % self.ip_address)
+        self.logger.info('Goint to restart %s' % self.ip_address)
         run_ssh_command(command, self.ip_address, sudo=True)
     
     def quit_any_apps(self, number=4):
@@ -47,20 +59,17 @@ class Host(object):
             run_ssh_command(cmd, self.ip_address)
 
     def reachable(self):
-        """
+        """ Check whether the host is reachable via ssh.
 
         >>> host = Host(10, '127.0.0.1')
         >>> host.reachable() is False
         True
 
-        :return:
+        :return: (bool) True, if host is reachable via ssh.
         """
         command = 'echo test'
         out, error = run_ssh_command(command, self.ip_address)
-        if out:  # TODO: maybe specify more direct
+        if out:
             return True
         else:
             return False
-
-
-
