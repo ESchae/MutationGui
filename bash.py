@@ -1,17 +1,17 @@
-import subprocess
-import shlex, errno
-import logging, time
-#from pssh.pssh_client import ParallelSSHClient  # pip install parallel-ssh
-#from pssh.utils import enable_logger, logger
-#from gevent import joinall
+""" Module containing functions for the execution of bash commands.
 
-#pssh_logger = logger
-#enable_logger(pssh_logger)
-logger = logging.getLogger(__name__)  # general purpose logger
+Copyright 2018
+Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
+"""
+import subprocess
+import shlex
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def run_shell_command(command):
-    """
+    """ Run any given command as shell command.
 
     >>> out, err = run_shell_command('echo test')
     >>> print(out)
@@ -43,9 +43,9 @@ def run_shell_command(command):
 
 
 def run_ssh_command(command, ip_address, sudo=False):
-    """
+    """ Execute the given command via ssh on a host with given ip address.
 
-    # TODO: Try those
+    # TODO: Try ssh with sudo
     >>> cmd = 'sudo shutdown -r now'
     >>> run_ssh_command(cmd, '192.168.0.13')
 
@@ -54,18 +54,18 @@ def run_ssh_command(command, ip_address, sudo=False):
     :return:
     """
     # -tt is needed because stdin is not a terminal
-    # -o ConnectTimeout=2 lets ssh wait only two seconds for the connection
+    # -o ConnectTimeout=1 lets ssh wait only one second for the connection
+    # this is used to speed up the process, if a connection can not be
+    # established
     if sudo:
+        # TODO: Works in terminal, but not if evoked via python script...
         # -t is used to show the password promt in terminal
-        command = 'ssh -tt -t -o ConnectTimeout=1 %s "%s"' % (ip_address, command)
+        command = 'ssh -tt -t -o ConnectTimeout=1 %s "%s"' % (ip_address,
+                                                              command)
     else:
-        command = 'ssh -tt -t -o ConnectTimeout=1 %s "%s"' % (ip_address, command)
+        command = 'ssh -tt -o ConnectTimeout=1 %s "%s"' % (ip_address,
+                                                           command)
     return run_shell_command(command)
 
 
-"""
-def copy_to_all_hosts(files, ip_addresses):
-    client = ParallelSSHClient(ip_addresses)
-    cmds = client.copy_file('../test', 'test_dir/test', recurse=True)  # todo: try with files - maybe problem with list?
-    joinall(cmds, raise_error=True)
-"""
+# TODO: Instead of ssh, pssh could be tried (python library exists)
