@@ -251,6 +251,7 @@ class MutationGui(tk.Frame):
         # TODO: Close specific opened apps on projectors
         # Note: Actually the only opened apps should be for each projector
         # the checker_app and app - should be easy to close them directly
+        # --> start by trying method quit_app() from projector.py
         for host_frame in self.host_frames:
             host_frame.host.quit_any_apps()
 
