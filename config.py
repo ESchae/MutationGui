@@ -1,6 +1,15 @@
-basepath = '/Users/mutation/Desktop/Mutation2018Files/'
-desktoppath = '/Users/mutation/Desktop/'
+""" Module for global configuration settings.
 
+Copyright 2018
+Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
+"""
+
+
+desktoppath = '/Users/mutation/Desktop/'
+basepath = '/Users/mutation/Desktop/Mutation2018Files/'
+
+
+######################### GROUP CONFIGURATIONs ################################
 # all files that should be run from one of the hosts are stored in basepath
 # within groups, each group specifies which app should be run on which
 # projector, given the filename from within the group's folder in basepath
@@ -17,12 +26,15 @@ desktoppath = '/Users/mutation/Desktop/'
 #
 # MarninTobi could specify 'play_me_on_all_hosts.app' as app for all
 # projectors
-
-
+#
+#
 # Note on syphon server app name:
 # It is assumed that the app name is the same like the app name given
-# in "app", e.g. for an app called /test/mycinder.app the cynder app name
+# in "app", e.g. for an app called /test/mycinder.app the syphon app name
 # should be mycinder
+#
+# IMPORTANT NOTE: Syphon server setting could not be tested completely yet
+# with the BetterChecker3000 App (see e.g. Alessandro's group settings)
 
 groups = {
     'TeamTest': {
@@ -114,6 +126,7 @@ groups = {
             },
             'L': {
                 'app': '10/Screen2/CinderProject.app',
+                # Setting of 2nd syphon server did not work yet, unclear why
                 'syphon_server': 'screen2'
             },
             'right': {
@@ -222,16 +235,19 @@ groups = {
     }
 }
 
-# Projector name is as name to describe its shape or position and to easily
-# find its 'real' place in MUT.
 
+####################### HOST CONFIGURATION ####################################
+#
+# Projector name is a name to describe its shape or position and to easily
+# find its 'real' place in MUT.
+#
 # Projector position is the monitor position of the projector if you open
 # screen share of the host to which belongs the projector. Possible options
 # are: left, right or main, if only one projector is used.
 # Note, that 'right-screen' means, that the monitor must be set in system
 # preferences as the right monitor!
-
-
+#
+#
 # IMPORTANT NOTE 1: The name of the corresponding checker app for a specific
 # projector will be derived as follows:
 #
@@ -239,7 +255,7 @@ groups = {
 #
 # Hence you need to manually make sure that the right folder(s) lie(s) on the
 # Desktop of every host.
-
+#
 # IMPORTANT NOTE 2: Right-screen must be listed before left-screen!
 # This is because the apps will be opened one after one, on hosts with
 # two projectors, first the app which should be run on right-screen will be
@@ -249,13 +265,12 @@ groups = {
 # 'move_to_second_screen.scpt'* which must be on the Desktops of all hosts.
 # After the app is moved to the second screen, full screen is toggled. Then
 # the app which should run on the main (left) monitor is opened.
-
+#
 # * script taken from
 # https://apple.stackexchange.com/questions/136324/moving-finder-window-from-one-display-to-another
-
+#
 # BetterChecker3000_v1 = left screen (uses port 40000 for OSC)
 # BetterChecker3000_v2 = right screen (uses port 40100 for OSC)
-
 
 hosts = {
     10: {
