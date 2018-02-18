@@ -1,3 +1,8 @@
+""" Main module containing all gui related functionality.
+
+Copyright 2018
+Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
+"""
 import Tkinter as tk
 import tkMessageBox
 import logging
