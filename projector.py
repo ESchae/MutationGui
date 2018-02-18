@@ -2,6 +2,7 @@
 
 Copyright 2018
 Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
+
 """
 import os
 import logging
