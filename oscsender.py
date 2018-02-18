@@ -1,3 +1,8 @@
+""" Module containing function for sending of osc messages.
+
+Copyright 2018
+Author Elke Schaechtele <elke.schaechtele@stud.hfm-karlsruhe.de>
+"""
 import OSC  # pip install pyOSC
 import logging
 
