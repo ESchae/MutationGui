@@ -58,8 +58,8 @@ def run_ssh_command(command, ip_address, sudo=False):
     # this is used to speed up the process, if a connection can not be
     # established
     if sudo:
-        # TODO: Works in terminal, but not if evoked via python script...
         # -t is used to show the password promt in terminal
+        # TODO: Works in terminal, but not if evoked via python script...
         command = 'ssh -tt -t -o ConnectTimeout=1 %s "%s"' % (ip_address,
                                                               command)
     else:
