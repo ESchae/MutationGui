@@ -10,7 +10,8 @@ controlled by one main computer. The idea of this GUI was to ease and speed up
 the controlling of the hosts and their projectors.
 
 ## Functionality
- The Gui's purpose mainly is to display information on the hosts and projectors.
+ The Gui's purpose mainly is to display information on the hosts and projectors
+ as well as to open, start and quit apps, according to different group settings.
  The information it needs to do so is taken from the configuration given in
  config.py. Hence in order to adopt the Gui for your Mutation project, you
  first need to adapt the settings in config.py.
