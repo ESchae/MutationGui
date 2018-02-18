@@ -9,6 +9,8 @@ with eight projectors were used for the visuals. The host computers were
 controlled by one main computer. The idea of this GUI was to ease and speed up
 the controlling of the hosts and their projectors.
 
+[[https://github.com/ESchae/MutationGui/blob/master/gui-screenshot.png|alt=octocat]]
+
 ## Functionality
  The Gui's purpose mainly is to display information on the hosts and projectors
  as well as to open, start and quit apps, according to different group settings.
